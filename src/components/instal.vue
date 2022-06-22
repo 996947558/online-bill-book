@@ -45,24 +45,38 @@
         return false;
     };
     if(this.getid==0) {
-    axios.post('/qds/account/addDeal?name='+this.msg.name+'&number='+this.msg.number).then(
-        function(res) {
-            //alert('保存成功')
-        }
-        )
-        .catch(function (error) {
-        });
+    // axios.post('/qds/account/addDeal?name='+this.msg.name+'&number='+this.msg.number).then(
+    //     function(res) {
+    //         //alert('保存成功')
+    //     }
+    //     )
+    //     .catch(function (error) {
+    //     });
+    axios.post('http://localhost:3000/api/addAccount',{
+      name:this.msg.name,
+      number:this.msg.number,
+    }).then(
+      res => console.log(res)
+    )
     } else {
-    axios.post('/qds/account/change?id='+this.getid+'&name='+this.msg.name+'&number='+this.msg.number).then(
-        function(res) {
-            //alert('保存成功')
+    // axios.post('/qds/account/change?id='+this.getid+'&name='+this.msg.name+'&number='+this.msg.number).then(
+    //     function(res) {
+    //         //alert('保存成功')
+    //     }
+    //     )
+    //     .catch(function (error) {
+    //     });
+    axios.post('http://localhost:3000/api/updata/'+this.getid,{
+      name:this.msg.name,
+      number:this.msg.number,
+    }).then(
+      res => {
+        console.log(res)
+        alert('保存成功')
         }
-        )
-        .catch(function (error) {
-        });
-        }
-
-    this.$router.push({path:"/bill"})
+    )
+    }
+        this.$router.push({path:"/bill"})
     },
     returns() {
         this.$router.push({path:"/bill"})

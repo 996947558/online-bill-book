@@ -14,16 +14,16 @@
   </div>
 
 
- <el-table :data="iae.data" stripe style="width: 100%">
+ <el-table :data="iae" stripe style="width: 100%">
     <el-table-column prop="name" label="交易名称" min-width="25%"/>
     <el-table-column prop="number" label="金额" min-width="25%"/>
-    <el-table-column prop="date" label="日期" min-width="25%"/>
+    <el-table-column prop="updatedAt" label="日期" min-width="25%"/>
     <el-table-column label="操作" min-width="25%"  style="display: flex;
     justify-content:center;
     align-items:Center;">
 　　　　<template slot-scope="scope">
-　　　　　　<el-button type="success" @click="busFun(scope.row.id)" style="float: right;margin-right: 5px;">修改</el-button>
-　　　　　　<el-button type="danger" @click="delRow(scope.row.id)" style="float: right;margin-right: 5px;">删除</el-button>
+　　　　　　<el-button type="success" @click="busFun(scope.row._id)" style="float: right;margin-right: 5px;">修改</el-button>
+　　　　　　<el-button type="danger" @click="delRow(scope.row._id)" style="float: right;margin-right: 5px;">删除</el-button>
 　　　　</template>
     </el-table-column>
   </el-table>
@@ -53,26 +53,41 @@
     delRow(id) {
     //console.log(id);
       var _this=this;
-      axios.post('/qds/account/remove?id='+id).then(
-        function(res) {
+      // axios.post('/qds/account/remove?id='+id).then(
+      //   function(res) {
+      //     _this.findAll();
+      //   }
+      // )
+      // .catch(function (error) {
+      //   alert("删除失败")
+      // });
+      axios.get('http://localhost:3000/api/remove/'+id).then(
+        res => {
           _this.findAll();
+        },
+        err => {
+          alert("删除失败")
         }
       )
-      .catch(function (error) {
-        alert("删除失败")
-      });
     },
 
     findAll(){
     var _this=this;
-    axios.post('/qds/account/getHistory').then(
-      function(res) {
+    // axios.post('/qds/account/getHistory').then(
+    //   function(res) {
+    //     _this.iae=res.data;
+    //   }
+    // )
+    axios.get('http://localhost:3000/api/getHistory').then(
+      res => {
+        //console.log(res);
+        res.data.map(item => {
+          item.updatedAt=item.updatedAt.slice(0,10)
+        })
         _this.iae=res.data;
+        // console.log(_this.iae);
       }
     )
-    .catch(function (error) {
-      alert('载入失败')
-    });
     },
 
     busFun(data) {
@@ -87,18 +102,31 @@
 
     search() {
     var _this=this;
-    axios.post('/qds/account/search?name='+this.input1).then(
-        function(res) {
-            _this.iae=res.data;
-        }
+    // axios.get('http://localhost:3000/api/search/'+this.input1).then(
+    //     function(res) {
+    //         _this.iae=res.data;
+    //     }
+    //     )
+    //     .catch(function (error) {
+    //     });
+    // },
+    axios.post('http://localhost:3000/api/search/',{
+      name:this.input1
+    }).then(
+      res => _this.iae=res.data
         )
-        .catch(function (error) {
-        });
     },
   },
-  created() {
+  mounted() {
     this.findAll();
   },
+  //监听函数
+watch: {
+    '$route' () {
+      this.findAll();//我的初始化方法
+    }
+  },
+
 }
 
 

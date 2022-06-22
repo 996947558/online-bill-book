@@ -22,10 +22,10 @@ export default {
 
   created() {
     var _this = this;
-    axios.post('/qds/account/getFocus').then(
+    axios.get('http://localhost:3000/api/getFocus').then(
       function(res) {
-        _this.datas = res.data.data;
-        //console.log(res.data.data);
+        console.log(res.data);
+        _this.datas = res.data;
       }
     )
   .catch();
@@ -53,9 +53,9 @@ export default {
             }]
         });
         var _this = this;
-    axios.post('/qds/account/getFocus').then(
+    axios.get('http://localhost:3000/api/getFocus').then(
     function(res) {
-      _this.cc =[res.data.data.expend,res.data.data.earning];
+      _this.cc =[res.data.expend,res.data.earning];
       //console.log(_this.cc);
       myChart.setOption({
                 series: [{
@@ -65,7 +65,6 @@ export default {
     }
     )
   .catch();
-
     }
   }
 
